@@ -66,6 +66,7 @@ export async function sendPhotoFromUrl(params: {
   photoUrl: string;
   caption: string;
   parseMode: 'HTML';
+  replyMarkup?: unknown;
 }): Promise<TelegramMessage> {
   const imageRes = await fetch(params.photoUrl);
   if (!imageRes.ok) {
@@ -79,6 +80,9 @@ export async function sendPhotoFromUrl(params: {
   form.set('chat_id', params.chatId);
   form.set('caption', params.caption);
   form.set('parse_mode', params.parseMode);
+  if (params.replyMarkup !== undefined) {
+    form.set('reply_markup', JSON.stringify(params.replyMarkup));
+  }
   form.set('photo', new Blob([buf], { type: mime }), 'stat-widget.png');
 
   const res = await fetch(apiUrl(params.token, 'sendPhoto'), {

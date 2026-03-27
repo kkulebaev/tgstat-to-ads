@@ -4,7 +4,7 @@ import { withAdvisoryLock } from './lock.js';
 import { fetchTgStat } from './tgstat.js';
 import { parseTgStatEnvelope } from './tgstat.types.js';
 import { buildCaptionHtml, type Metrics } from './caption.js';
-import { deleteMessage, sendMessage, sendPhotoFromUrl } from './telegram.js';
+import { deleteMessage, sendPhotoFromUrl } from './telegram.js';
 
 function pickMetrics(params: {
   envelope: unknown;
@@ -50,24 +50,19 @@ export async function runJob(params: {
   tgstatWidgetUrl: string;
   ctaUrl: string;
   tgStatMock: boolean;
-}): Promise<{ photoMessageId: number; ctaMessageId: number }>{
+}): Promise<{ photoMessageId: number }>{
   return await withAdvisoryLock({
     pool: params.pool,
     key: `tgstat-to-ads:${params.stateKey}`,
     fn: async () => {
       const state = await loadState(params.pool, params.stateKey);
 
-  const toDelete = [
-    state.photo_message_id ? { kind: 'photo' as const, id: state.photo_message_id } : null,
-    state.cta_message_id ? { kind: 'cta' as const, id: state.cta_message_id } : null,
-  ].filter((x): x is { kind: 'photo' | 'cta'; id: number } => x !== null);
-
-  for (const msg of toDelete) {
+  if (state.photo_message_id) {
     try {
       await deleteMessage({
         token: params.telegramToken,
         chatId: params.telegramChatId,
-        messageId: msg.id,
+        messageId: state.photo_message_id,
       });
     } catch {
       // ignore
@@ -103,7 +98,11 @@ export async function runJob(params: {
     reportDate,
   });
 
-  const caption = buildCaptionHtml(metrics);
+  const caption = [
+    buildCaptionHtml(metrics),
+    '',
+    'Нажмите кнопку ниже, чтобы написать по размещению рекламы',
+  ].join('\n');
 
   const photoMsg = await sendPhotoFromUrl({
     token: params.telegramToken,
@@ -111,12 +110,6 @@ export async function runJob(params: {
     photoUrl: params.tgstatWidgetUrl,
     caption,
     parseMode: 'HTML',
-  });
-
-  const ctaMsg = await sendMessage({
-    token: params.telegramToken,
-    chatId: params.telegramChatId,
-    text: 'Нажмите кнопку ниже, чтобы написать по размещению рекламы',
     replyMarkup: {
       inline_keyboard: [[{ text: 'Размещение рекламы', url: params.ctaUrl }]],
     },
@@ -125,10 +118,9 @@ export async function runJob(params: {
       await saveState(params.pool, {
         key: params.stateKey,
         photo_message_id: photoMsg.message_id,
-        cta_message_id: ctaMsg.message_id,
       });
 
-      return { photoMessageId: photoMsg.message_id, ctaMessageId: ctaMsg.message_id };
+      return { photoMessageId: photoMsg.message_id };
     },
   });
 }
