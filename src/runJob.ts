@@ -2,49 +2,41 @@ import type pg from 'pg';
 import { loadState, saveState } from './db.js';
 import { withAdvisoryLock } from './lock.js';
 import { fetchTgStat } from './tgstat.js';
+import { tgStatEnvelopeSchema } from './tgstat.types.js';
 import { buildCaptionHtml, type Metrics } from './caption.js';
 import { deleteMessage, sendMessage, sendPhotoFromUrl } from './telegram.js';
-
-function asNumber(v: unknown): number | null {
-  if (typeof v === 'number' && Number.isFinite(v)) return v;
-  if (typeof v === 'string' && v.trim() !== '' && Number.isFinite(Number(v))) return Number(v);
-  return null;
-}
 
 function pickMetrics(params: {
   envelope: unknown;
   channelTitleFallback: string;
   reportDate: Date;
 }): Metrics {
-  // TGStat response shape can vary; we treat it as unknown and cherry-pick common fields.
-  const env = params.envelope as { response?: unknown };
-  const r = (env.response ?? {}) as Record<string, unknown>;
+  const parsed = tgStatEnvelopeSchema.parse(params.envelope);
+  const r = parsed.response;
 
-  const channelTitle =
-    (typeof r.title === 'string' && r.title.trim() !== '' ? r.title : null) ??
-    params.channelTitleFallback;
+  const channelTitle = r.title?.trim() ? r.title : params.channelTitleFallback;
 
   return {
     channelTitle,
     reportDate: params.reportDate,
 
-    subscribers: asNumber(r.participants_count) ?? asNumber(r.subscribers) ?? 0,
-    subscribersDeltaWeek: asNumber(r.participants_delta_week) ?? asNumber(r.subscribers_delta_week),
-    subscribersDeltaMonth: asNumber(r.participants_delta_month) ?? asNumber(r.subscribers_delta_month),
+    subscribers: r.participants_count,
+    subscribersDeltaWeek: null,
+    subscribersDeltaMonth: null,
 
-    avgPostReach: asNumber(r.avg_post_reach) ?? asNumber(r.avg_reach),
-    err: asNumber(r.err),
-    err24: asNumber(r.err24) ?? asNumber(r.err_24),
+    avgPostReach: r.avg_post_reach ?? null,
+    err: r.err_percent ?? null,
+    err24: r.err24_percent ?? null,
 
-    adViews24: asNumber(r.ads_views_24) ?? asNumber(r.ads24) ?? asNumber(r.ad_views_24),
-    adViews48: asNumber(r.ads_views_48) ?? asNumber(r.ads48) ?? asNumber(r.ad_views_48),
+    adViews24: r.adv_post_reach_24h ?? null,
+    adViews48: r.adv_post_reach_48h ?? null,
 
-    citationIndex: asNumber(r.citation_index) ?? asNumber(r.ci),
-    citingChannels: asNumber(r.citing_channels) ?? asNumber(r.citingChannels),
-    mentions: asNumber(r.mentions),
-    reposts: asNumber(r.reposts),
+    citationIndex: r.ci_index ?? null,
+    citingChannels: r.mentioning_channels_count ?? null,
+    mentions: r.mentions_count ?? null,
+    reposts: r.forwards_count ?? null,
 
-    channelAgeMonths: asNumber(r.channel_age_months) ?? asNumber(r.age_months),
+    channelAgeMonths: null,
   };
 }
 
@@ -83,10 +75,7 @@ export async function runJob(params: {
 
   const tg = await fetchTgStat({ token: params.tgstatToken, channelId: params.tgstatChannelId });
 
-  // Date: prefer TGStat timestamp if present; fallback to today.
-  const response = (tg.response ?? {}) as Record<string, unknown>;
-  const ts = response.date ?? response.timestamp ?? response.updated_at;
-  const reportDate = typeof ts === 'string' || typeof ts === 'number' ? new Date(ts) : new Date();
+  const reportDate = new Date();
 
   const metrics = pickMetrics({
     envelope: tg,
