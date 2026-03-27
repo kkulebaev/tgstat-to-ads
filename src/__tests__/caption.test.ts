@@ -21,7 +21,7 @@ describe('buildCaptionHtml', () => {
       channelAgeMonths: 5,
     });
 
-    expect(text).toContain('📊 Статистика Telegram-канала Nude &lt;Vision&gt; &amp; Co (26.02.2026)');
+    expect(text).toContain('<b>📊 Статистика Telegram-канала Nude &lt;Vision&gt; &amp; Co (26.02.2026)</b>');
     expect(text).toContain('🔹 Подписчики: 1');
     expect(text).toMatch(/🔹 Подписчики: 1\s*805/);
     expect(text).toContain('ERR 93.5%');
