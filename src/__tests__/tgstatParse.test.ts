@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { tgStatEnvelopeSchema } from '../tgstat.types.js';
+import { parseTgStatEnvelope } from '../tgstat.types.js';
 
-describe('tgStatEnvelopeSchema', () => {
+describe('parseTgStatEnvelope', () => {
   it('parses documented TGStat shape', () => {
     const input = {
       status: 'ok',
@@ -27,7 +27,7 @@ describe('tgStatEnvelopeSchema', () => {
       },
     };
 
-    const parsed = tgStatEnvelopeSchema.parse(input);
+    const parsed = parseTgStatEnvelope(input);
 
     expect(parsed.status).toBe('ok');
     expect(parsed.response.participants_count).toBe(2048184);

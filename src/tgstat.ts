@@ -1,13 +1,9 @@
-import { z } from 'zod';
-
-const tgStatSchema = z.object({
-  status: z.string().optional(),
-  error: z.unknown().optional(),
-  message: z.unknown().optional(),
-  response: z.unknown().optional(),
-});
-
-export type TgStatEnvelope = z.infer<typeof tgStatSchema>;
+export type TgStatEnvelope = {
+  status?: string;
+  error?: unknown;
+  message?: unknown;
+  response?: unknown;
+};
 
 export async function fetchTgStat(params: {
   token: string;
@@ -23,7 +19,7 @@ export async function fetchTgStat(params: {
   }
 
   const json: unknown = await res.json();
-  const parsed = tgStatSchema.parse(json);
+  const parsed = json as TgStatEnvelope;
 
   if (parsed.status && parsed.status !== 'ok') {
     const details = parsed.error ?? parsed.message ?? 'n/a';
