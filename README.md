@@ -1,4 +1,4 @@
-# TGStat → Telegram Ads
+# tgstat-to-ads
 
 <p align="center">
   <img src="assets/banner.svg" alt="TGStat → Telegram Ads" width="100%" />
