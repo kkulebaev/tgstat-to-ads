@@ -53,7 +53,7 @@ export function buildCaptionHtml(m: Metrics): string {
   const date = formatDateRu(m.reportDate);
 
   return [
-    `1. 📊 Статистика Telegram-канала ${title} (${date})`,
+    `<b>📊 Статистика Telegram-канала ${title} (${date})</b>`,
     '',
     'Канал уверенно растёт и показывает стабильные рекламные показатели в нише 18+ с живой, вовлечённой аудиторией.',
     '',
