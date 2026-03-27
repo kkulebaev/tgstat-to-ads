@@ -1,4 +1,3 @@
-import { request } from 'undici';
 import { z } from 'zod';
 
 const tgStatSchema = z.object({
@@ -18,8 +17,12 @@ export async function fetchTgStat(params: {
   url.searchParams.set('token', params.token);
   url.searchParams.set('channelId', params.channelId);
 
-  const res = await request(url.toString(), { method: 'GET' });
-  const json: unknown = await res.body.json();
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`TGStat HTTP error: ${res.status}`);
+  }
+
+  const json: unknown = await res.json();
   const parsed = tgStatSchema.parse(json);
 
   if (parsed.status && parsed.status !== 'ok') {
