@@ -25,6 +25,9 @@ async function main(): Promise<void> {
   } finally {
     await pool.end();
   }
+
+  // Railway Cron Job: ensure the process exits even if the event loop has open handles.
+  process.exit(0);
 }
 
 main().catch((e: unknown) => {
