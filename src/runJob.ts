@@ -21,8 +21,6 @@ function pickMetrics(params: {
     reportDate: params.reportDate,
 
     subscribers: r.participants_count,
-    subscribersDeltaWeek: null,
-    subscribersDeltaMonth: null,
 
     avgPostReach: r.avg_post_reach ?? null,
     err: r.err_percent ?? null,
