@@ -18,6 +18,7 @@ async function main(): Promise<void> {
       tgstatChannelId: env.TGSTAT_CHANNEL_ID,
       tgstatWidgetUrl: env.TGSTAT_WIDGET_URL,
       ctaUrl: env.CTA_URL,
+      tgStatMock: env.TG_STAT_MOCK,
     });
 
     console.log(JSON.stringify({ ok: true, result }, null, 2));

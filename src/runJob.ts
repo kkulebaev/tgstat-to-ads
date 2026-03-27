@@ -49,6 +49,7 @@ export async function runJob(params: {
   tgstatChannelId: string;
   tgstatWidgetUrl: string;
   ctaUrl: string;
+  tgStatMock: boolean;
 }): Promise<{ photoMessageId: number; ctaMessageId: number }>{
   return await withAdvisoryLock({
     pool: params.pool,
@@ -73,7 +74,26 @@ export async function runJob(params: {
     }
   }
 
-  const tg = await fetchTgStat({ token: params.tgstatToken, channelId: params.tgstatChannelId });
+  const tg = params.tgStatMock
+    ? {
+        status: 'ok',
+        response: {
+          id: 0,
+          title: 'Nude Vision',
+          username: '@nude_vision',
+          participants_count: 1805,
+          avg_post_reach: 1687,
+          adv_post_reach_24h: 401,
+          adv_post_reach_48h: 579,
+          err_percent: 93.5,
+          err24_percent: 24,
+          ci_index: 7.0,
+          mentioning_channels_count: 23,
+          mentions_count: 42,
+          forwards_count: 22,
+        },
+      }
+    : await fetchTgStat({ token: params.tgstatToken, channelId: params.tgstatChannelId });
 
   const reportDate = new Date();
 

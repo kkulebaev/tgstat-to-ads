@@ -7,6 +7,7 @@ type Env = {
   TGSTAT_CHANNEL_ID: string;
   TGSTAT_WIDGET_URL: string;
   CTA_URL: string;
+  TG_STAT_MOCK: boolean;
 };
 
 function requireNonEmpty(name: string, value: string | undefined): string {
@@ -42,6 +43,7 @@ export function getEnv(rawEnv: NodeJS.ProcessEnv = process.env): Env {
     TGSTAT_CHANNEL_ID: requireNonEmpty('TGSTAT_CHANNEL_ID', rawEnv.TGSTAT_CHANNEL_ID),
     TGSTAT_WIDGET_URL: requireUrl('TGSTAT_WIDGET_URL', rawEnv.TGSTAT_WIDGET_URL),
     CTA_URL: requireUrl('CTA_URL', rawEnv.CTA_URL),
+    TG_STAT_MOCK: rawEnv.TG_STAT_MOCK === '1' || rawEnv.TG_STAT_MOCK === 'true',
   };
 }
 
