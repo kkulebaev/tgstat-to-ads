@@ -7,8 +7,6 @@ describe('buildCaptionHtml', () => {
       channelTitle: 'Nude <Vision> & Co',
       reportDate: new Date('2026-02-26T00:00:00Z'),
       subscribers: 1805,
-      subscribersDeltaWeek: 136,
-      subscribersDeltaMonth: 1124,
       avgPostReach: 1687,
       err: 93.5,
       err24: 24,

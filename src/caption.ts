@@ -22,9 +22,6 @@ type Metrics = {
   reportDate: Date;
 
   subscribers: number;
-  subscribersDeltaWeek: number | null;
-  subscribersDeltaMonth: number | null;
-
   avgPostReach: number | null;
   err: number | null;
   err24: number | null;
@@ -58,8 +55,6 @@ export function buildCaptionHtml(m: Metrics): string {
     'Канал уверенно растёт и показывает стабильные рекламные показатели в нише 18+ с живой, вовлечённой аудиторией.',
     '',
     `🔹 Подписчики: ${n(m.subscribers)}`,
-    `— +${m.subscribersDeltaWeek === null ? '—' : n(m.subscribersDeltaWeek)} за неделю`,
-    `— +${m.subscribersDeltaMonth === null ? '—' : n(m.subscribersDeltaMonth)} за месяц`,
     '➡️ активный приток новой аудитории, канал находится в фазе роста',
     '',
     '🔹 Охваты:',
