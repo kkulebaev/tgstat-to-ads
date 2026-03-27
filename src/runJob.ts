@@ -101,7 +101,7 @@ export async function runJob(params: {
   const caption = [
     buildCaptionHtml(metrics),
     '',
-    'Нажмите кнопку ниже, чтобы написать по размещению рекламы',
+    '<i>Нажмите кнопку ниже, чтобы написать по размещению рекламы</i>',
   ].join('\n');
 
   const photoMsg = await sendPhotoFromUrl({
