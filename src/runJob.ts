@@ -2,7 +2,7 @@ import type pg from 'pg';
 import { loadState, saveState } from './db.js';
 import { withAdvisoryLock } from './lock.js';
 import { fetchTgStat } from './tgstat.js';
-import { tgStatEnvelopeSchema } from './tgstat.types.js';
+import { parseTgStatEnvelope } from './tgstat.types.js';
 import { buildCaptionHtml, type Metrics } from './caption.js';
 import { deleteMessage, sendMessage, sendPhotoFromUrl } from './telegram.js';
 
@@ -11,7 +11,7 @@ function pickMetrics(params: {
   channelTitleFallback: string;
   reportDate: Date;
 }): Metrics {
-  const parsed = tgStatEnvelopeSchema.parse(params.envelope);
+  const parsed = parseTgStatEnvelope(params.envelope);
   const r = parsed.response;
 
   const channelTitle = r.title?.trim() ? r.title : params.channelTitleFallback;
