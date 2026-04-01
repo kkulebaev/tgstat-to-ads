@@ -7,8 +7,6 @@
 <p align="center">
   <a href="https://github.com/kkulebaev/tgstat-to-ads/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/kkulebaev/tgstat-to-ads/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://github.com/kkulebaev/tgstat-to-ads/pulls"><img alt="PRs" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
-  <a href="https://github.com/kkulebaev/tgstat-to-ads/issues"><img alt="Issues" src="https://img.shields.io/github/issues/kkulebaev/tgstat-to-ads" /></a>
-  <a href="https://github.com/kkulebaev/tgstat-to-ads"><img alt="Last commit" src="https://img.shields.io/github/last-commit/kkulebaev/tgstat-to-ads" /></a>
   <img alt="Node" src="https://img.shields.io/badge/node-22.x-339933?logo=node.js&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" />
   <img alt="Platform" src="https://img.shields.io/badge/platform-Railway-7B3FE4" />
@@ -77,4 +75,4 @@ npm run cron
 
 ## License
 
-No license specified yet.
+MIT — see [LICENSE](LICENSE).
