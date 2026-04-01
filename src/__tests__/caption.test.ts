@@ -24,5 +24,9 @@ describe('buildCaptionHtml', () => {
     expect(text).toMatch(/🔹 Подписчики: 1\s*805/);
     expect(text).toContain('ERR 93.5%');
     expect(text).toContain('ERR₍24₎ 24%');
+
+    expect(text).toContain('~401 просмотр');
+    expect(text).toContain('42 упоминания и 22 репоста');
+    expect(text).toContain('~6 месяцев');
   });
 });
