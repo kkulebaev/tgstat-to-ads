@@ -45,6 +45,27 @@ function p(pv: number | null): string {
   return pv === null ? '—' : `${pv}`;
 }
 
+function pluralRu(value: number, forms: { one: string; few: string; many: string }): string {
+  const nAbs = Math.abs(value);
+  const lastTwo = nAbs % 100;
+
+  if (lastTwo >= 11 && lastTwo <= 14) {
+    return forms.many;
+  }
+
+  const last = nAbs % 10;
+
+  if (last === 1) {
+    return forms.one;
+  }
+
+  if (last >= 2 && last <= 4) {
+    return forms.few;
+  }
+
+  return forms.many;
+}
+
 export function buildCaptionHtml(m: Metrics): string {
   const title = escapeHtml(m.channelTitle);
   const date = formatDateRu(m.reportDate);
@@ -63,17 +84,26 @@ export function buildCaptionHtml(m: Metrics): string {
     `— ERR₍24₎ ${m.err24 === null ? '—' : `${p(m.err24)}%`} — высокий интерес в первые сутки`,
     '',
     '🔹 Рекламные показатели:',
-    `— ~${m.adViews24 === null ? '—' : n(m.adViews24)} просмотр за первые 24 часа`,
-    `— до ${m.adViews48 === null ? '—' : n(m.adViews48)} просмотров за 48 часов`,
+    `— ~${m.adViews24 === null ? '—' : `${n(m.adViews24)} ${pluralRu(m.adViews24, { one: 'просмотр', few: 'просмотра', many: 'просмотров' })}`} за первые 24 часа`,
+    `— до ${m.adViews48 === null ? '—' : `${n(m.adViews48)} ${pluralRu(m.adViews48, { one: 'просмотр', few: 'просмотра', many: 'просмотров' })}`} за 48 часов`,
     '➡️ реклама продолжает добирать охват, а не «умирает» после публикации',
     '',
     '🔹 Цитируемость и распространение:',
     `— индекс цитирования: ${m.citationIndex === null ? '—' : m.citationIndex}`,
     `— ${m.citingChannels === null ? '—' : n(m.citingChannels)} канала ссылаются на контент`,
-    `— ${m.mentions === null ? '—' : n(m.mentions)} упоминания и ${m.reposts === null ? '—' : n(m.reposts)} репоста`,
+    (() => {
+      if (m.mentions === null || m.reposts === null) {
+        return `— ${m.mentions === null ? '—' : n(m.mentions)} упоминания и ${m.reposts === null ? '—' : n(m.reposts)} репоста`;
+      }
+
+      const mentions = `${n(m.mentions)} ${pluralRu(m.mentions, { one: 'упоминание', few: 'упоминания', many: 'упоминаний' })}`;
+      const reposts = `${n(m.reposts)} ${pluralRu(m.reposts, { one: 'репост', few: 'репоста', many: 'репостов' })}`;
+
+      return `— ${mentions} и ${reposts}`;
+    })(),
     '➡️ контент активно разлетается по Telegram',
     '',
-    `🔹 Возраст канала: ${m.channelAgeMonths === null ? '—' : `~${m.channelAgeMonths} месяцев`}`,
+    `🔹 Возраст канала: ${m.channelAgeMonths === null ? '—' : `~${m.channelAgeMonths} ${pluralRu(m.channelAgeMonths, { one: 'месяц', few: 'месяца', many: 'месяцев' })}`}`,
     '➡️ молодая аудитория без выгорания и рекламной слепоты',
   ].join('\n');
 }
