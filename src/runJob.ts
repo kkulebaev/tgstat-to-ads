@@ -6,6 +6,8 @@ import { parseTgStatEnvelope } from './tgstat.types.js';
 import { buildCaptionHtml, type Metrics } from './caption.js';
 import { deleteMessage, sendPhotoFromUrl } from './telegram.js';
 
+const CHANNEL_CREATED_AT = new Date('2025-09-16T00:00:00Z');
+
 function pickMetrics(params: {
   envelope: unknown;
   channelTitleFallback: string;
@@ -15,6 +17,12 @@ function pickMetrics(params: {
   const r = parsed.response;
 
   const channelTitle = r.title?.trim() ? r.title : params.channelTitleFallback;
+
+  const now = new Date();
+
+  const diffMonths =
+    (now.getUTCFullYear() - CHANNEL_CREATED_AT.getUTCFullYear()) * 12
+    + (now.getUTCMonth() - CHANNEL_CREATED_AT.getUTCMonth());
 
   return {
     channelTitle,
@@ -34,7 +42,7 @@ function pickMetrics(params: {
     mentions: r.mentions_count ?? null,
     reposts: r.forwards_count ?? null,
 
-    channelAgeMonths: null,
+    channelAgeMonths: diffMonths,
   };
 }
 

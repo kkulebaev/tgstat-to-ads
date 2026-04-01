@@ -16,7 +16,7 @@ describe('buildCaptionHtml', () => {
       citingChannels: 23,
       mentions: 42,
       reposts: 22,
-      channelAgeMonths: 5,
+      channelAgeMonths: 6,
     });
 
     expect(text).toContain('<b>📊 Статистика Telegram-канала Nude &lt;Vision&gt; &amp; Co (26.02.2026)</b>');
