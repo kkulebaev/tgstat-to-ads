@@ -21,21 +21,6 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
   return json as T;
 }
 
-export async function deleteMessage(params: {
-  token: string;
-  chatId: string;
-  messageId: number;
-}): Promise<void> {
-  const data = await postJson<TelegramResponse<boolean>>(
-    apiUrl(params.token, 'deleteMessage'),
-    { chat_id: params.chatId, message_id: params.messageId },
-  );
-
-  if (!data.ok) {
-    throw new Error(`Telegram deleteMessage failed: ${data.error_code} ${data.description}`);
-  }
-}
-
 export async function sendMessage(params: {
   token: string;
   chatId: string;

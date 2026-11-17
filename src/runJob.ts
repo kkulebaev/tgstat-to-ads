@@ -1,10 +1,7 @@
-import type pg from 'pg';
-import { loadState, saveState } from './db.js';
-import { withAdvisoryLock } from './lock.js';
 import { fetchTgStat } from './tgstat.js';
 import { parseTgStatEnvelope } from './tgstat.types.js';
 import { buildCaptionHtml, type Metrics } from './caption.js';
-import { deleteMessage, sendPhotoFromUrl } from './telegram.js';
+import { sendPhotoFromUrl } from './telegram.js';
 
 const CHANNEL_CREATED_AT = new Date('2025-09-16T00:00:00Z');
 
@@ -47,8 +44,6 @@ function pickMetrics(params: {
 }
 
 export async function runJob(params: {
-  pool: pg.Pool;
-  stateKey: string;
   telegramToken: string;
   telegramChatId: string;
   tgstatToken: string;
@@ -56,25 +51,7 @@ export async function runJob(params: {
   tgstatWidgetUrl: string;
   ctaUrl: string;
   tgStatMock: boolean;
-}): Promise<{ photoMessageId: number }>{
-  return await withAdvisoryLock({
-    pool: params.pool,
-    key: `tgstat-to-ads:${params.stateKey}`,
-    fn: async () => {
-      const state = await loadState(params.pool, params.stateKey);
-
-  if (state.photo_message_id) {
-    try {
-      await deleteMessage({
-        token: params.telegramToken,
-        chatId: params.telegramChatId,
-        messageId: state.photo_message_id,
-      });
-    } catch {
-      // ignore
-    }
-  }
-
+}): Promise<{ photoMessageId: number }> {
   const tg = params.tgStatMock
     ? {
         status: 'ok',
@@ -121,12 +98,5 @@ export async function runJob(params: {
     },
   });
 
-      await saveState(params.pool, {
-        key: params.stateKey,
-        photo_message_id: photoMsg.message_id,
-      });
-
-      return { photoMessageId: photoMsg.message_id };
-    },
-  });
+  return { photoMessageId: photoMsg.message_id };
 }

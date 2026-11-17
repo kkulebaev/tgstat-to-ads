@@ -1,6 +1,5 @@
 type Env = {
   PORT: number;
-  DATABASE_URL: string;
   TELEGRAM_ADS_BOT_TOKEN: string;
   TELEGRAM_CHAT_ID: string;
   TGSTAT_TOKEN: string;
@@ -36,7 +35,6 @@ function parsePort(raw: string | undefined): number {
 export function getEnv(rawEnv: NodeJS.ProcessEnv = process.env): Env {
   return {
     PORT: parsePort(rawEnv.PORT),
-    DATABASE_URL: requireNonEmpty('DATABASE_URL', rawEnv.DATABASE_URL),
     TELEGRAM_ADS_BOT_TOKEN: requireNonEmpty('TELEGRAM_ADS_BOT_TOKEN', rawEnv.TELEGRAM_ADS_BOT_TOKEN),
     TELEGRAM_CHAT_ID: requireNonEmpty('TELEGRAM_CHAT_ID', rawEnv.TELEGRAM_CHAT_ID),
     TGSTAT_TOKEN: requireNonEmpty('TGSTAT_TOKEN', rawEnv.TGSTAT_TOKEN),
