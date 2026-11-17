@@ -27,6 +27,7 @@ A tiny cron-style Node.js app that posts Telegram channel statistics (from TGSta
 ## Requirements
 
 - Node.js 26+
+- pnpm 12+
 - Postgres (Railway Postgres works great)
 - Telegram Bot token
 - TGStat API token
@@ -51,12 +52,12 @@ Optional:
 ## Local development
 
 ```bash
-npm i
-npm run typecheck
-npm test
+pnpm install
+pnpm typecheck
+pnpm test
 
 # Run one-off locally
-npm run cron
+pnpm cron
 ```
 
 ## Railway setup
@@ -65,8 +66,8 @@ npm run cron
 2. Add Postgres (Railway plugin) → it will provide `DATABASE_URL`.
 3. Set the environment variables listed above.
 4. Create a **Railway Cron Job**:
-   - Build command: `npm ci && npm run build`
-   - Run command: `npm run cron:prod`
+   - Build command: `pnpm install --frozen-lockfile && pnpm build`
+   - Run command: `pnpm cron:prod`
    - Schedule: every Monday at 08:00 UTC (or whatever you need)
 
 ## Notes
