@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=26"
+  },
   "scripts": {
     "dev": "tsx src/cron.ts",
     "start": "node dist/cron.js",
@@ -17,10 +20,10 @@
     "pg": "^8.20.0"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "^26.6.6",
     "@types/pg": "^8.20.0",
     "@vitest/coverage-v8": "^4.1.2",
-    "tsx": "^4.21.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vitest": "^4.1.2"
   }

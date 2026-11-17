@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://github.com/kkulebaev/tgstat-to-ads/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/kkulebaev/tgstat-to-ads/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://github.com/kkulebaev/tgstat-to-ads/pulls"><img alt="PRs" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
-  <img alt="Node" src="https://img.shields.io/badge/node-22.x-339933?logo=node.js&logoColor=white" />
+  <img alt="Node" src="https://img.shields.io/badge/node-26.x-339933?logo=node.js&logoColor=white" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" />
   <img alt="Platform" src="https://img.shields.io/badge/platform-Railway-7B3FE4" />
 </p>
@@ -26,7 +26,7 @@ A tiny cron-style Node.js app that posts Telegram channel statistics (from TGSta
 
 ## Requirements
 
-- Node.js 22+
+- Node.js 26+
 - Postgres (Railway Postgres works great)
 - Telegram Bot token
 - TGStat API token
